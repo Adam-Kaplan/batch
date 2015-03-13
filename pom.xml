@@ -7,36 +7,53 @@
 	<groupId>com.test</groupId>
 	<artifactId>batch</artifactId>
 	<version>0.0.1</version>
-	
-	<properties>
-	  <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	
-		<mock-server.port>9999</mock-server.port>
-		
-		<cassandra.rpcPort>19160</cassandra.rpcPort>
-    <cassandra.jmxPort>17199</cassandra.jmxPort>
-    <cassandra.storagePort>17000</cassandra.storagePort>
-    <cassandra.stopPort>18081</cassandra.stopPort>
-	</properties>
 
-<!-- 	<parent>
+  <!-- Defines build definition for creating the jar -->
+	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>1.2.2.RELEASE</version>
-	</parent> -->
+	</parent>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+		<mock-server.port>9999</mock-server.port>
+
+		<cassandra.rpcPort>19160</cassandra.rpcPort>
+		<cassandra.jmxPort>17199</cassandra.jmxPort>
+		<cassandra.storagePort>7000</cassandra.storagePort>
+		<cassandra.stopPort>18081</cassandra.stopPort>
+	</properties>
+
 
 	<dependencies>
-
-		<!-- <dependency>
+		<!-- Reference the Spring boot classes -->
+		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-batch</artifactId>
-		</dependency> -->
+		</dependency>
 
-		<!-- <dependency>
+		<!-- used to store the details of a spring batch job execution -->
+		<dependency>
 			<groupId>org.hsqldb</groupId>
 			<artifactId>hsqldb</artifactId>
-		</dependency> -->
+		</dependency>
 
+		<!-- For making restful calls to external services. -->
+		<dependency>
+			<groupId>org.apache.cxf</groupId>
+			<artifactId>cxf-rt-rs-client</artifactId>
+			<version>3.0.0-milestone1</version>
+		</dependency>
+
+    <!-- Access to the Cassandra datastore -->
+		<dependency>
+			<groupId>com.datastax.cassandra</groupId>
+			<artifactId>cassandra-driver-core</artifactId>
+			<version>2.1.4</version>
+		</dependency>
+		
 		<!-- Contains interfaces for interacting with the mock web server. -->
 		<dependency>
 			<groupId>org.mock-server</groupId>
@@ -49,57 +66,70 @@
 
 	<build>
 		<plugins>
-			<!-- <plugin>
+
+			<!-- Specify the Java version for compile and run. -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+				</configuration>
+			</plugin>
+
+      <!-- plugin to create the executable jar -->
+			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin> -->
-			
+				<executions>
+				  <execution>
+				    <id>boot-application</id>
+				    <phase>integration-test</phase>
+				    <goals>
+				      <goal>run</goal>
+				    </goals>
+				  </execution>
+				</executions>
+			</plugin>
+
+			<!-- Manages the integration test dependencies through the maven lifecycle. -->
 			<plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <configuration>
-          <!-- or whatever version you use -->
-          <source>1.8</source>
-          <target>1.8</target>
-        </configuration>
-      </plugin>
+				<artifactId>maven-failsafe-plugin</artifactId>
+				<configuration>
+					<encoding>${project.build.sourceEncoding}</encoding>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>integration-test</goal>
+							<goal>verify</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 
-      <plugin>
-        <artifactId>maven-failsafe-plugin</artifactId>
-        <version>2.7.1</version>
-        <configuration>
-          <encoding>${project.build.sourceEncoding}</encoding>
-        </configuration>
-        <executions>
-          <execution>
-            <goals>
-              <goal>integration-test</goal>
-              <goal>verify</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>cassandra-maven-plugin</artifactId>
-        <version>2.0.0-1</version>
-        <configuration>
-          <rpcPort>${cassandra.rpcPort}</rpcPort>
-          <jmxPort>${cassandra.jmxPort}</jmxPort>
-          <storagePort>${cassandra.storagePort}</storagePort>
-          <stopPort>${cassandra.stopPort}</stopPort>
-        </configuration>
-        <executions>
-          <execution>
-            <goals>
-              <goal>start</goal>
-              <goal>stop</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
+			<!-- Starts and stops a cassandra nosql database. -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>cassandra-maven-plugin</artifactId>
+				<version>2.0.0-1</version>
+				<configuration>
+					<rpcPort>${cassandra.rpcPort}</rpcPort>
+					<jmxPort>${cassandra.jmxPort}</jmxPort>
+					<storagePort>${cassandra.storagePort}</storagePort>
+					<stopPort>${cassandra.stopPort}</stopPort>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>start</goal>
+							<goal>stop</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 
+			<!-- Creates a mockable webserver. -->
 			<plugin>
 				<groupId>org.mock-server</groupId>
 				<artifactId>mockserver-maven-plugin</artifactId>
@@ -128,6 +158,7 @@
 				</executions>
 			</plugin>
 		</plugins>
+
 	</build>
 
 </project>
