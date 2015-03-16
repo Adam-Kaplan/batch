@@ -21,6 +21,7 @@ public class BatchConfiguration {
 	
 	@Bean
 	public Job testJob(JobBuilderFactory jobs, Step testStep) {
+		
 		return jobs.get("testJob")
 				.incrementer( new RunIdIncrementer() )
 				.flow( testStep )
@@ -34,6 +35,7 @@ public class BatchConfiguration {
 			RESTItemReader restItemReader, 
 			RESTItemToCassandraItemProcessor restItemToCassandraItemProcessor, 
 			CassandraItemWriter cassandraItemWriter) {
+		
 		return stepBuilderFactory.get("testStep")
 				.<RESTItem, CassandraItem> chunk(1)
 				.reader(restItemReader)
