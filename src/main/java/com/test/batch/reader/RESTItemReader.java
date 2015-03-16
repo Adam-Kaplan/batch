@@ -1,5 +1,6 @@
 package com.test.batch.reader;
 
+import org.apache.log4j.Logger;
 import org.springframework.batch.item.ExecutionContext;
 import org.springframework.batch.item.ItemStreamException;
 import org.springframework.batch.item.ItemStreamReader;
@@ -15,8 +16,10 @@ import com.test.jaxrs.entity.RESTResult;
 
 @Component
 public class RESTItemReader implements ItemStreamReader<RESTItem> {
+	private static final Logger logger = Logger.getLogger(RESTItemReader.class);
+	
 	public static final String REST_ITEM_INDEX_TRACKER = "com.test.batch.reader.RESTItemReader#itemIndex";
-	public static final int REST_ITEM_FIRST_INDEX = 0;
+	public static final int REST_ITEM_FIRST_INDEX = -1;
 	
 	@Autowired
 	private IRESTProxy restProxy;
@@ -38,7 +41,10 @@ public class RESTItemReader implements ItemStreamReader<RESTItem> {
 	@Override
 	public void update(ExecutionContext executionContext) throws ItemStreamException {
 		if (executionContext.containsKey( REST_ITEM_INDEX_TRACKER )) {
-			executionContext.put( REST_ITEM_INDEX_TRACKER, executionContext.getInt(REST_ITEM_INDEX_TRACKER)+1 );
+			int nextIndex = executionContext.getInt(REST_ITEM_INDEX_TRACKER) + 1;
+			
+			this.setItemIndex( nextIndex );
+			executionContext.put( REST_ITEM_INDEX_TRACKER, nextIndex);
 		} else {
 			throw new ItemStreamException( "Update requested before web service has been called." );
 		}
@@ -53,14 +59,22 @@ public class RESTItemReader implements ItemStreamReader<RESTItem> {
 	@Override
 	public RESTItem read() throws Exception, UnexpectedInputException, ParseException, NonTransientResourceException {
 		RESTResult result = this.getRestResult();
+		
 		if (result == null) {
 			throw new UnexpectedInputException( "Data not avaliable from web service." );
 		} else {
 			int index = this.getItemIndex();
 			if (index < result.getData().getItems().size()) {
-				return result.getData().getItems().get(index);
+				RESTItem item = result.getData().getItems().get(index);
+				
+				logger.debug("Reading item : " + item);
+				
+				return item;
 			} else {
 				// if at end of list, return null
+
+				logger.debug("No more items to read.");
+				
 				return null;
 			}
 		}

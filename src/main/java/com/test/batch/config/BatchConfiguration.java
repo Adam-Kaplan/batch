@@ -29,9 +29,13 @@ public class BatchConfiguration {
 	}
 	
 	@Bean
-	public Step testStep(StepBuilderFactory stepBuilderFactory, RESTItemReader restItemReader, RESTItemToCassandraItemProcessor restItemToCassandraItemProcessor, CassandraItemWriter cassandraItemWriter) {
+	public Step testStep(
+			StepBuilderFactory stepBuilderFactory, 
+			RESTItemReader restItemReader, 
+			RESTItemToCassandraItemProcessor restItemToCassandraItemProcessor, 
+			CassandraItemWriter cassandraItemWriter) {
 		return stepBuilderFactory.get("testStep")
-				.<RESTItem, CassandraItem> chunk(10)
+				.<RESTItem, CassandraItem> chunk(1)
 				.reader(restItemReader)
 				.processor(restItemToCassandraItemProcessor)
 				.writer(cassandraItemWriter)

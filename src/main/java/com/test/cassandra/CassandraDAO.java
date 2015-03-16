@@ -23,8 +23,8 @@ public class CassandraDAO {
 	
 	@PostConstruct
 	private void init() throws Exception {
-		this.setWritePreparedStatement( this.getSession().prepare("INSERT INTO simple (id, key) VALUES (?,?);") );
-		this.setReadAllPreparedStatement( this.getSession().prepare("SELECT * FROM simple;") );
+		this.setWritePreparedStatement( this.getSession().prepare("INSERT INTO item (id, key) VALUES (?,?);") );
+		this.setReadAllPreparedStatement( this.getSession().prepare("SELECT * FROM item;") );
 	}
 	
 	public void write(CassandraItem item) {

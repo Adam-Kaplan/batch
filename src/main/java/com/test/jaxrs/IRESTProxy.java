@@ -5,9 +5,9 @@ import javax.ws.rs.Path;
 
 import com.test.jaxrs.entity.RESTResult;
 
-@Path("/")
 public interface IRESTProxy {
 	
 	@GET
+	@Path("/data")
 	public RESTResult callWS();
 }

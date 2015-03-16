@@ -11,7 +11,7 @@ public class CassandraItem {
 		StringBuilder builder = new StringBuilder();
 		
 		builder.append("{\"id\":\"").append(id.toString())
-			.append("\", key\":\"").append(key).append("}");
+			.append("\", \"key\":\"").append(key).append("\"}");
 		
 		return builder.toString();
 	}

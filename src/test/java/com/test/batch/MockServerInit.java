@@ -3,13 +3,10 @@ package com.test.batch;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
 
-import java.util.concurrent.TimeUnit;
-
 import org.apache.http.HttpStatus;
 import org.mockserver.client.server.MockServerClient;
 import org.mockserver.initialize.ExpectationInitializer;
 import org.mockserver.matchers.Times;
-import org.mockserver.model.Delay;
 import org.mockserver.model.Header;
 
 public class MockServerInit implements ExpectationInitializer {
@@ -29,7 +26,6 @@ public class MockServerInit implements ExpectationInitializer {
 					new Header("Content-Type", "application/xml")
 				)
 				.withBody("<result><status>true</status><data><items><item><key>value</key></item><item><key>value2</key></item></items></data></result>")
-				.withDelay( new Delay(TimeUnit.MILLISECONDS, 30) )
 		);
 		
 	}
