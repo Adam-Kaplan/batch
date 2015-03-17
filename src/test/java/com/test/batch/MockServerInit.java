@@ -25,7 +25,19 @@ public class MockServerInit implements ExpectationInitializer {
 				.withHeaders(
 					new Header("Content-Type", "application/xml")
 				)
-				.withBody("<result><status>true</status><data><items><item><key>value</key></item><item><key>value2</key></item></items></data></result>")
+				.withBody("<result>"
+							+ "<status>true</status>"
+							+ "<data>"
+								+ "<items>"
+									+ "<item>"
+										+ "<key>value</key>"
+									+ "</item>"
+									+ "<item>"
+										+ "<key>value2</key>"
+									+ "</item>"
+								+ "</items>"
+							+ "</data>"
+						+ "</result>")
 		);
 		
 	}

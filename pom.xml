@@ -89,6 +89,43 @@
       <scope>test</scope>
     </dependency>
 
+    <!-- Junit -->
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>test</scope>
+    </dependency>
+  
+    <!-- Spring test -->
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+    
+    <!-- 
+    Needed to get spring boot to cooporeate with mock-sever
+    https://github.com/spring-projects/spring-boot/issues/1801
+     -->
+    <!-- <dependency>
+        <groupId>org.springframework.security</groupId>
+        <artifactId>spring-security-config</artifactId>
+        <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-webmvc</artifactId>
+      <scope>test</scope>
+    </dependency> -->
+    
+    <!-- Hamcrest Matchers for complex assertions. -->
+    <dependency>
+      <groupId>org.hamcrest</groupId>
+      <artifactId>hamcrest-all</artifactId>
+      <version>1.3</version>
+      <scope>test</scope>
+    </dependency>
+    
   </dependencies>
 
   <build>
@@ -105,7 +142,7 @@
       </plugin>
 
       <!-- plugin to create the executable jar -->
-      <plugin>
+      <!-- <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
         <executions>
@@ -117,13 +154,17 @@
             </goals>
           </execution>
         </executions>
-      </plugin>
+      </plugin> -->
 
       <!-- Manages the integration test dependencies through the maven lifecycle. -->
       <plugin>
         <artifactId>maven-failsafe-plugin</artifactId>
         <configuration>
           <encoding>${project.build.sourceEncoding}</encoding>
+          <systemPropertyVariables>
+            <org.mock-server.host>localhost</org.mock-server.host>
+            <org.mock-server.port>${mock-server.port}</org.mock-server.port>
+          </systemPropertyVariables>
         </configuration>
         <executions>
           <execution>

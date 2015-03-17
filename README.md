@@ -19,10 +19,13 @@ correctly.
 
 ## Run the Build ##
 
-`mvn install`
+`mvn clean install`
 
 1. Start up all dependencies in the *pre-integration-test* phase.
   * Mock Server
+    * Uses `MockServerInit` to mock the server request/responses.
   * Cassandra
-2. Use the spring boot to run the application in the *integration-test* phase.
+2. Will run `ApplicationIT` to validate the tests.
+  * The test depends on a clean before the test so that the cassandra database files get deleted.
 3. Shutdown dependencies.
+4. Report on test status.
