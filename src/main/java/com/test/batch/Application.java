@@ -17,26 +17,19 @@ public class Application implements CommandLineRunner {
 
 	public static void main(String[] args) throws Exception {
 		logger.debug( "Start Application." );
+		
 		ConfigurableApplicationContext context = SpringApplication.run( Application.class , args );
 		
 		context.close();
+		
 		logger.debug( "End Application." );
 	}
 
 	@Autowired
 	private CassandraDAO cassandraDAO;
-	
+
 	@Override
-	public void run(String... args) throws Exception {
-		
-		logger.debug("Process complete.  Cassandra contains:");
-		
-		cassandraDAO.readAll().forEach(item -> {
-			
-			logger.debug( item );
-			
-		});
-	}
+	public void run(String... args) throws Exception {}
 
 	public CassandraDAO getCassandraDAO() {
 		return cassandraDAO;
